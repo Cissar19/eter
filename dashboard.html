@@ -785,10 +785,8 @@ const GES = 0.731;
 function calcAge(dobStr) {
   const [y, m, d] = dobStr.split('-').map(Number);
   const now = new Date();
-  // ISAPRE: se usa el día 30 del mes en curso como fecha de referencia
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const refDay  = Math.min(30, lastDay);
-  const ref = new Date(now.getFullYear(), now.getMonth(), refDay);
+  // ISAPRE: la edad se calcula al último día del mes siguiente al de contratación
+  const ref = new Date(now.getFullYear(), now.getMonth() + 2, 0);
   let age = ref.getFullYear() - y;
   const mDiff = (ref.getMonth() + 1) - m;
   if (mDiff < 0 || (mDiff === 0 && ref.getDate() < d)) age--;
@@ -809,10 +807,9 @@ function updateBageHint() {
   const age  = calcAge(dob);
   const name = $('bname').value.trim() || 'Esta persona';
   const now  = new Date();
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const refDay  = Math.min(30, lastDay);
-  const mes  = MONTHS_HINT[now.getMonth()];
-  hint.innerHTML = `<b>${escapeHtml(name)}</b> tendrá <b>${age} año${age !== 1 ? 's' : ''}</b> al ${refDay} de ${mes} de ${now.getFullYear()}.`;
+  const ref  = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+  const mes  = MONTHS_HINT[ref.getMonth()];
+  hint.innerHTML = `<b>${escapeHtml(name)}</b> tendrá <b>${age} año${age !== 1 ? 's' : ''}</b> al ${ref.getDate()} de ${mes} de ${ref.getFullYear()}.`;
   hint.style.display = 'block';
 }
 
